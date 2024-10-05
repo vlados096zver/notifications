@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 
@@ -8,11 +7,13 @@ import { PushNotifications, Token } from '@capacitor/push-notifications';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
- title = 'notifications';
-   ngOnInit() {
+  title = 'notifications';
+
+  ngOnInit() {
     this.initializePushNotifications();
   }
 
+  // Метод для инициализации push-уведомлений
   initializePushNotifications() {
     // Запрос разрешений
     PushNotifications.requestPermissions().then(permission => {
@@ -44,5 +45,4 @@ export class AppComponent implements OnInit {
       alert('Notification action: ' + JSON.stringify(notification));
     });
   }
-  
 }
