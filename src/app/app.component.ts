@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
+
 
 @Component({
   selector: 'app-root',
@@ -9,10 +11,17 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 })
 export class AppComponent implements OnInit {
   title = 'notifications';
+  sqlite: SQLiteConnection;
+  data: any[] = []; 
+
+  constructor() {
+    this.sqlite = new SQLiteConnection(CapacitorSQLite);
+  }
 
   ngOnInit() {
     this.initializePushNotifications();
     this.initializeLocalNotifications();
+    this.initializeDatabase();
   }
 
   // Метод для инициализации push-уведомлений
@@ -88,5 +97,35 @@ export class AppComponent implements OnInit {
       ]
     });
     console.log('Local notification scheduled');
+  }
+
+       async initializeDatabase() {
+    try {
+      // Создаем подключение к базе данных с дополнительным аргументом readonly
+      const db = await this.sqlite.createConnection('myDB', false, 'no-encryption', 1, false);
+      await db.open();
+
+      // Создаем таблицу
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS test (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT NOT NULL
+        );
+      `);
+
+      // Вставляем данные
+      await db.run('INSERT INTO test (name) VALUES (?)', ['testName']);
+
+      // Выполняем запрос для получения данных
+      const result = await db.query('SELECT * FROM test');
+
+      // Проверяем, есть ли результат и значения
+      this.data = result.values ? result.values : [];
+
+      console.log('Data from test table: ', this.data);
+
+    } catch (error) {
+      console.error('Error initializing database: ', error);
+    }
   }
 }
