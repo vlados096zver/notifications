@@ -2,17 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app">
 
-    <!-- Разрешение для точных уведомлений (Android 12+ требуется для Schedule) -->
+    <!-- Precise Notifications Permission (Android 12+ required for Schedule) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <!-- Разрешение для интернет-соединения -->
+    <!-- Internet connection permission -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Разрешение для локальных уведомлений (Android 13+) -->
+    <!-- Permission for local notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Разрешение для чтения из внешнего хранилища -->
+    <!-- Permission to read from external storage -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- Разрешение для записи во внешнее хранилище -->
+    <!-- Permission to write to external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- Разрешение для камеры -->
+    <!-- Camera resolution -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Provider для управления файлами -->
+        <!-- Provider for file management -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

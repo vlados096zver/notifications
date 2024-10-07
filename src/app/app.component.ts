@@ -9,8 +9,6 @@ import {
 } from '@capacitor/barcode-scanner';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -33,51 +31,51 @@ export class AppComponent implements OnInit {
     this.initializeDatabase();
   }
 
-  // Метод для инициализации push-уведомлений
+  // Method for initializing push notifications
   initializePushNotifications() {
-    // Запрос разрешений
+    // Request permissions
     PushNotifications.requestPermissions().then(permission => {
       if (permission.receive === 'granted') {
-        // Регистрация устройства
+        // Device registration
         PushNotifications.register();
       }
     });
 
-    // Получение токена для отправки сообщений на устройство
+    // Getting a token to send messages to the device
     PushNotifications.addListener('registration', (token: Token) => {
       console.log('Registered with token: ', token.value);
     });
 
-    // Обработка ошибок
+    // Error handling
     PushNotifications.addListener('registrationError', (error: any) => {
       console.error('Registration error: ', error);
     });
 
-    // Получение push-уведомлений
+    // Receiving push notifications
     PushNotifications.addListener('pushNotificationReceived', (notification: any) => {
       console.log('Push notification received: ', notification);
       alert('Notification received in foreground: ' + JSON.stringify(notification));
     });
 
-    // Обработка нажатий на push-уведомления
+    // Handling clicks on push notifications
     PushNotifications.addListener('pushNotificationActionPerformed', (notification: any) => {
       console.log('Push notification action performed: ', notification);
       alert('Notification action: ' + JSON.stringify(notification));
     });
   }
 
-  // Метод для инициализации локальных уведомлений
+  // Method for initializing local notifications
   async initializeLocalNotifications() {
-    // Запрос разрешений для локальных уведомлений
+    // Request permissions for local notifications
     const permission = await LocalNotifications.requestPermissions();
     if (permission.display === 'granted') {
       console.log('Local notifications permission granted');
-      this.scheduleLocalNotification();  // Тестовое уведомление
+      this.scheduleLocalNotification();  // Test notification
     } else {
       console.log('Local notifications permission denied');
     }
 
-    // Прослушивание событий локальных уведомлений
+    // Listening for local notification events
     LocalNotifications.addListener('localNotificationReceived', (notification) => {
       console.log('Local notification received:', notification);
       alert('Local notification received: ' + JSON.stringify(notification));
@@ -89,15 +87,15 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // Планирование тестового локального уведомления
+  // Scheduling a test local notification
   async scheduleLocalNotification() {
     await LocalNotifications.schedule({
       notifications: [
         {
-          id: 1,  // Уникальный идентификатор уведомления
+          id: 1,  // Unique notification identifier
           title: "Тестовое уведомление",
           body: "Это тестовое локальное уведомление!",
-          schedule: { at: new Date(Date.now() + 5000) },  // Через 5 секунд
+          schedule: { at: new Date(Date.now() + 5000) },  // In 5 seconds
           sound: undefined,
           attachments: undefined,
           actionTypeId: "",
@@ -110,11 +108,11 @@ export class AppComponent implements OnInit {
 
        async initializeDatabase() {
     try {
-      // Создаем подключение к базе данных с дополнительным аргументом readonly
+      // Create a database connection with an additional readonly argument
       const db = await this.sqlite.createConnection('myDB', false, 'no-encryption', 1, false);
       await db.open();
 
-      // Создаем таблицу
+      // Create a table
       await db.execute(`
         CREATE TABLE IF NOT EXISTS test (
           id INTEGER PRIMARY KEY NOT NULL,
@@ -122,13 +120,13 @@ export class AppComponent implements OnInit {
         );
       `);
 
-      // Вставляем данные
+      // Insert data
       await db.run('INSERT INTO test (name) VALUES (?)', ['testName']);
 
-      // Выполняем запрос для получения данных
+      // We execute a request to obtain data
       const result = await db.query('SELECT * FROM test');
 
-      // Проверяем, есть ли результат и значения
+      // We check if there is a result and values
       this.data = result.values ? result.values : [];
 
       console.log('Data from test table: ', this.data);
@@ -140,7 +138,7 @@ export class AppComponent implements OnInit {
 
   async startScan(): Promise<void> {
     try {
-      const cameraPermission = await this.checkCameraPermission(); // Метод для проверки разрешений
+      const cameraPermission = await this.checkCameraPermission(); // Method for checking permissions
 
       if (cameraPermission) {
         const result = await CapacitorBarcodeScanner.scanBarcode({
