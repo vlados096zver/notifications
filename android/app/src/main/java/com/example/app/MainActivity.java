@@ -11,5 +11,7 @@ public class MainActivity extends BridgeActivity {
 
         // Инициализация Firebase
         FirebaseApp.initializeApp(this);
+
+        // Явная регистрация плагина не требуется для официального плагина @capacitor/local-notifications
     }
 }
