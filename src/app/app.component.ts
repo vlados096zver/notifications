@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
+import {
+  CapacitorBarcodeScanner,
+  CapacitorBarcodeScannerCameraDirection,
+  CapacitorBarcodeScannerTypeHint
+} from '@capacitor/barcode-scanner';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 
 
 @Component({
@@ -12,7 +19,9 @@ import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
 export class AppComponent implements OnInit {
   title = 'notifications';
   sqlite: SQLiteConnection;
-  data: any[] = []; 
+  data: any[] = [];
+  qrContent: string = '';
+
 
   constructor() {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
@@ -128,4 +137,37 @@ export class AppComponent implements OnInit {
       console.error('Error initializing database: ', error);
     }
   }
+
+  async startScan(): Promise<void> {
+    try {
+      const cameraPermission = await this.checkCameraPermission(); // Метод для проверки разрешений
+
+      if (cameraPermission) {
+        const result = await CapacitorBarcodeScanner.scanBarcode({
+          cameraDirection: CapacitorBarcodeScannerCameraDirection.BACK,
+          scanInstructions: 'Hold your camera up to the QR code',
+          scanButton: false,
+          hint: CapacitorBarcodeScannerTypeHint.ALL
+        });
+
+        if (result && result.ScanResult) {
+          this.qrContent = result.ScanResult;
+          console.log('QR Code Content:', result.ScanResult);
+        } else {
+          this.qrContent = 'No QR Code content found';
+        }
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (error) {
+      console.error('Error starting scan:', error);
+    }
+  }
+
+  async checkCameraPermission(): Promise<boolean> {
+    const permission = await Camera.requestPermissions();
+    return permission.camera === 'granted';
+  }
+
+
 }

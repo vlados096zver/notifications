@@ -15,4 +15,10 @@
   </div>
 </div>
 
+<div>
+  <h1>{{ title }}</h1>
+  <button (click)="startScan()"> Start QR Scan!</button>
+  <p *ngIf="qrContent">{{ qrContent }}</p>
+</div>
+
 <router-outlet></router-outlet>

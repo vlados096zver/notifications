@@ -8,6 +8,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Разрешение для локальных уведомлений (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Разрешение для чтения из внешнего хранилища -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Разрешение для записи во внешнее хранилище -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Разрешение для камеры -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"

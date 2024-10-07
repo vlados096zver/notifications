@@ -21,6 +21,8 @@
     "@capacitor-community/sqlite": "^6.0.2",
     "@capacitor/android": "^6.1.2",
     "@capacitor/angular": "^2.0.3",
+    "@capacitor/barcode-scanner": "^1.0.1",
+    "@capacitor/camera": "^6.0.2",
     "@capacitor/core": "latest",
     "@capacitor/ios": "^6.1.2",
     "@capacitor/local-notifications": "^6.1.0",
