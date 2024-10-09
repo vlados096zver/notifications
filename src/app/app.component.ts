@@ -7,7 +7,8 @@ import {
   CapacitorBarcodeScannerCameraDirection,
   CapacitorBarcodeScannerTypeHint
 } from '@capacitor/barcode-scanner';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera } from '@capacitor/camera';
+import {BiometricService} from "./services/biometric.service";
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,9 @@ export class AppComponent implements OnInit {
   sqlite: SQLiteConnection;
   data: any[] = [];
   qrContent: string = '';
+  storedData: string | null = null
 
-
-  constructor() {
+  constructor(private biometricService: BiometricService) {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
   }
 
@@ -166,6 +167,25 @@ export class AppComponent implements OnInit {
     const permission = await Camera.requestPermissions();
     return permission.camera === 'granted';
   }
+
+
+  async authenticateAndStoreData() {
+    const biometricAvailable = await this.biometricService.isBiometricAvailable();
+    if (biometricAvailable) {
+      const authenticated = await this.biometricService.authenticate();
+      if (authenticated) {
+        console.log('Biometric authentication successful');
+        await this.biometricService.saveToSecureStorage('secureKey', 'ConfidentialData');
+        this.storedData = await this.biometricService.getFromSecureStorage('secureKey');
+        console.log('Retrieved data from secure storage:', this.storedData);
+      } else {
+        console.log('Biometric authentication failed');
+      }
+    } else {
+      console.log('Biometric authentication is not available');
+    }
+  }
+
 
 
 }
