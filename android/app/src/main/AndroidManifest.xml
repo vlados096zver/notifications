@@ -43,6 +43,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+          <!-- Deep Link Intent Filter with Auto-Verification -->
+          <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="myapp" android:host="com.example.app" android:pathPrefix="/home" />
+            <data android:scheme="myapp" android:host="com.example.app" android:pathPrefix="/details" />
+          </intent-filter>
         </activity>
 
         <!-- Provider for file management -->

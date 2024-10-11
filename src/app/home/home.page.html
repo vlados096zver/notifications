@@ -1,0 +1,29 @@
+<div>
+  <h1>Home</h1>
+
+  <div *ngIf="data.length > 0">
+    <h2>Data from SQLite:</h2>
+    <ul>
+      <li *ngFor="let item of data">
+        ID: {{ item.id }}, Name: {{ item.name }}
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="data.length === 0">
+    <p>No data available.</p>
+  </div>
+</div>
+
+<div>
+  <h1>{{ title }}</h1>
+  <button (click)="startScan()"> Start QR Scan!</button>
+  <p *ngIf="qrContent">{{ qrContent }}</p>
+</div>
+
+<div *ngIf="storedData">
+  <p>Data retrieved from secure storage: {{ storedData }}</p>
+</div>
+
+<button (click)="authenticateAndStoreData()">Authenticate with Biometrics</button>
+
