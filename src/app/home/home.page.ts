@@ -22,7 +22,10 @@ export class HomePage {
   sqlite: SQLiteConnection;
   data: any[] = [];
   qrContent: string = '';
-  storedData: string | null = null
+  storedData: string | null = null;
+  socketEntity: WebSocket | null = null;
+  response: string = '';
+  websocketMessage: string = 'Hello WebSocket!';
 
   constructor(private biometricService: BiometricService) {
     this.sqlite = new SQLiteConnection(CapacitorSQLite);
@@ -185,6 +188,55 @@ export class HomePage {
       }
     } else {
       console.log('Biometric authentication is not available');
+    }
+  }
+
+  // WebSocket
+  // Method for establishing a WebSocket connection
+  connectWebSocket() {
+    if (this.socketEntity) {
+      console.log('WebSocket already connected');
+      return;
+    }
+
+    this.socketEntity = new WebSocket('wss://echo.websocket.org/');
+
+    this.socketEntity.onopen = (event: Event) => {
+      this.response = 'Connection established';
+      console.log('WebSocket connection opened', event);
+    };
+
+    this.socketEntity.onmessage = (event: MessageEvent) => {
+      this.response = `Received: ${event.data}`;
+      console.log('Message received', event);
+    };
+
+    this.socketEntity.onclose = (event: CloseEvent) => {
+      this.response = `Connection closed: ${event.reason}`;
+      console.log('WebSocket connection closed', event);
+      this.socketEntity = null;  // Set null if connection is closed
+    };
+
+    this.socketEntity.onerror = (error: Event) => {
+      this.response = 'Error occurred';
+      console.error('WebSocket error', error);
+    };
+  }
+
+  // Method for sending message via WebSocket
+  sendMessage() {
+    if (this.socketEntity && this.socketEntity.readyState === WebSocket.OPEN) {
+      this.socketEntity.send(JSON.stringify({ message: this.websocketMessage }));
+      console.log('Message sent:', this.websocketMessage);
+    } else {
+      console.log('WebSocket is not open');
+    }
+  }
+
+  // Method for closing the connection
+  disconnectWebSocket() {
+    if (this.socketEntity) {
+      this.socketEntity.close();
     }
   }
 }
